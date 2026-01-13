@@ -11,9 +11,9 @@ COPY build/setup_user.sh /tmp/
 RUN chmod +x /tmp/setup_user.sh && /tmp/setup_user.sh
 
 # Install dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    bash curl unzip gosu tini \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    curl unzip gosu tini  && \
+    rm -rf /var/lib/apt/lists/*
 
 # Create directories
 RUN mkdir -p $HYTALE_HOME $DATA_DIR
@@ -22,9 +22,9 @@ WORKDIR $HYTALE_HOME
 
 # Copy scripts
 COPY scripts/ /scripts/
-COPY entrypoint.sh /opt/hytale/entrypoint.sh
-RUN chmod +x /scripts/*.sh /opt/hytale/entrypoint.sh
+COPY entrypoint.sh .
+RUN chmod +x /scripts/*.sh entrypoint.sh
 
 VOLUME ["/data"]
 
-ENTRYPOINT ["/usr/bin/tini", "--", "/opt/hytale/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/tini", "--", "./entrypoint.sh"]
