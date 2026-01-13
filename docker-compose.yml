@@ -1,0 +1,11 @@
+services:
+  hytale:
+    build: .
+    container_name: hytale-server
+    ports:
+      - "5520:5520/udp"
+    volumes:
+      - ./data:/data
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
