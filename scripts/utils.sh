@@ -19,6 +19,21 @@ log_error() {
     echo -e "[$(date +'%H:%M:%S')] ${RED}[ERRO]${RESET} $1"
 }
 
+# ===> Boolean Checks ----------------------------------------------------------
+isTrue() {
+    case "${1,,}" in
+        true | yes | 1) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+isFalse() {
+    case "${1,,}" in
+        false | no | 0) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
 # ===> Other -------------------------------------------------------------------
 download_file() {
     local url=$1

@@ -23,7 +23,7 @@ ensure_downloader() {
 }
 
 update_downloader() {
-    if [ "$SKIP_DOWNLOADER_UPDATE" == "true" ]; then
+    if isTrue "$SKIP_DOWNLOADER_UPDATE"; then
         log_info "Skipping downloader update check"
         return
     fi
@@ -119,7 +119,7 @@ check_game_version() {
 }
 
 download_game() {
-    if [ "$HYTALE_AUTO_DOWNLOAD" != "true" ]; then
+    if isFalse "$HYTALE_AUTO_DOWNLOAD"; then
         log_info "Auto-download disabled, skipping game download"
         return
     fi

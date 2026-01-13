@@ -3,6 +3,62 @@
 source /scripts/env.sh
 source /scripts/utils.sh
 
+: "${UID:=1000}"
+: "${GID:=1000}"
+: "${SKIP_CHOWN_DATA:=false}"
+
+umask "${UMASK:=0002}"
+
+chown_dirs() {
+    local dirs=(
+        "$DATA_DIR"
+        "$HYTALE_HOME"
+    )
+
+    for dir in "${dirs[@]}"; do
+        if [ -d "$dir" ]; then
+            chown -R hytale:hytale "$dir"
+        fi
+    done
+}
+
+update_user_id() {
+    if [[ -v UID ]]; then
+        if [[ $UID != 0 ]]; then
+            if [[ $UID != $(id -u hytale) ]]; then
+                log_info "Changing uid of hytale to $UID"
+                usermod -u "$UID" hytale
+            fi
+        else
+            runAsUser=root
+        fi
+    fi
+}
+
+update_group_id() {
+    if [[ -v GID ]]; then
+        if [[ $GID != 0 ]]; then
+            if [[ $GID != $(id -g hytale) ]]; then
+                log_info "Changing gid of hytale to $GID"
+                groupmod -o -g "$GID" hytale
+            fi
+        else
+            runAsGroup=root
+        fi
+    fi
+}
+
+update_ownership() {
+    local dirs=("$DATA_DIR" "$HYTALE_HOME")
+
+    for dir in "${dirs[@]}"; do
+        if isFalse "${SKIP_CHOWN_DATA}" && [[ $(stat -c "%u" "$dir") != "$UID" ]]; then
+            log_info "Changing ownership of $dir to $UID ..."
+            chown -R "${runAsUser}:${runAsGroup}" "$dir"
+        fi
+    done
+}
+
 start_server() {
     local jar_path="$DATA_DIR/Server/HytaleServer.jar"
 
@@ -27,7 +83,19 @@ start_server() {
     eval "java $(build_java_opts) -jar HytaleServer.jar $(build_server_args)"
 }
 
-# Run if directly executed
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    start_server
+if [ "$(id -u)" = 0 ]; then
+    runAsUser=hytale
+    runAsGroup=hytale
+
+    update_user_id
+    update_group_id
+    update_ownership
+
+    exec gosu "${runAsUser}:${runAsGroup}" bash -c \
+        "source /scripts/env.sh && \
+         source /scripts/utils.sh && \
+         $(declare -f start_server) && \
+         start_server"
+else
+    exec start_server "$@"
 fi

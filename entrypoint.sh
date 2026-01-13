@@ -17,4 +17,4 @@ run_updater
 
 # Start the server
 source /scripts/start.sh
-start_server
+start_server "$@"

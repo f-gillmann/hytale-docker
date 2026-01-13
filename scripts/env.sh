@@ -132,7 +132,7 @@ build_server_args() {
     fi
 
     # Plugins
-    if [ "$ACCEPT_EARLY_PLUGINS" == "true" ]; then
+    if isTrue "$ACCEPT_EARLY_PLUGINS"; then
         args="$args --accept-early-plugins"
     fi
     if [ -n "$EARLY_PLUGINS" ]; then
@@ -140,12 +140,12 @@ build_server_args() {
     fi
 
     # Permissions
-    if [ "$ALLOW_OP" == "true" ]; then
+    if isTrue "$ALLOW_OP"; then
         args="$args --allow-op"
     fi
 
     # Backups
-    if [ "$BACKUP_ENABLED" == "true" ]; then
+    if isTrue "$BACKUP_ENABLED"; then
         args="$args --backup"
         if [ -n "$BACKUP_DIR" ]; then
             args="$args --backup-dir $BACKUP_DIR"
@@ -164,24 +164,24 @@ build_server_args() {
     fi
 
     # Server Mode
-    if [ "$BARE_MODE" == "true" ]; then
+    if isTrue "$BARE_MODE"; then
         args="$args --bare"
     fi
-    if [ "$SINGLEPLAYER" == "true" ]; then
+    if isTrue "$SINGLEPLAYER"; then
         args="$args --singleplayer"
     fi
 
     # Validation & Migration
-    if [ "$VALIDATE_ASSETS" == "true" ]; then
+    if isTrue "$VALIDATE_ASSETS"; then
         args="$args --validate-assets"
     fi
     if [ -n "$VALIDATE_PREFABS" ]; then
         args="$args --validate-prefabs $VALIDATE_PREFABS"
     fi
-    if [ "$VALIDATE_WORLD_GEN" == "true" ]; then
+    if isTrue "$VALIDATE_WORLD_GEN"; then
         args="$args --validate-world-gen"
     fi
-    if [ "$SHUTDOWN_AFTER_VALIDATE" == "true" ]; then
+    if isTrue "$SHUTDOWN_AFTER_VALIDATE"; then
         args="$args --shutdown-after-validate"
     fi
     if [ -n "$MIGRATE_WORLDS" ]; then
@@ -192,27 +192,27 @@ build_server_args() {
     if [ -n "$BOOT_COMMAND" ]; then
         args="$args --boot-command \"$BOOT_COMMAND\""
     fi
-    if [ "$GENERATE_SCHEMA" == "true" ]; then
+    if isTrue "$GENERATE_SCHEMA"; then
         args="$args --generate-schema"
     fi
 
     # Advanced
-    if [ "$DISABLE_SENTRY" == "true" ]; then
+    if isTrue "$DISABLE_SENTRY"; then
         args="$args --disable-sentry"
     fi
-    if [ "$DISABLE_ASSET_COMPARE" == "true" ]; then
+    if isTrue "$DISABLE_ASSET_COMPARE"; then
         args="$args --disable-asset-compare"
     fi
-    if [ "$DISABLE_CPB_BUILD" == "true" ]; then
+    if isTrue "$DISABLE_CPB_BUILD"; then
         args="$args --disable-cpb-build"
     fi
-    if [ "$DISABLE_FILE_WATCHER" == "true" ]; then
+    if isTrue "$DISABLE_FILE_WATCHER"; then
         args="$args --disable-file-watcher"
     fi
-    if [ "$EVENT_DEBUG" == "true" ]; then
+    if isTrue "$EVENT_DEBUG"; then
         args="$args --event-debug"
     fi
-    if [ "$FORCE_NETWORK_FLUSH" != "true" ]; then
+    if isFalse "$FORCE_NETWORK_FLUSH"; then
         args="$args --force-network-flush $FORCE_NETWORK_FLUSH"
     fi
     if [ -n "$OWNER_NAME" ]; then
