@@ -78,7 +78,7 @@ start_server() {
     log_info "  Java Options: $(build_java_opts)"
     log_info "  Server Arguments: $(build_server_args)"
 
-    cd "$DATA_DIR/Server" || exit 1
+    cd "$DATA_DIR/Server" || { log_error "Failed to change directory to $DATA_DIR/Server"; exit 1; }
 
     eval "java $(build_java_opts) -jar HytaleServer.jar $(build_server_args)"
 }

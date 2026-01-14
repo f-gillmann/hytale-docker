@@ -24,8 +24,9 @@ setup_machine_id() {
         log_info "Using existing machine-id from data directory for Hardware UUID detection"
     fi
 
-    # Create symlink from /etc/machine-id to persistent machine-id file if needed
-    if [ ! -f /etc/machine-id ]; then
-        ln -s "$MACHINE_ID_FILE" /etc/machine-id
+    # Copy to /etc/machine-id if it doesn't exist or contents differ
+    if [ ! -f /etc/machine-id ] || ! cmp -s "$MACHINE_ID_FILE" /etc/machine-id; then
+        cp "$MACHINE_ID_FILE" /etc/machine-id
+        chmod 444 /etc/machine-id
     fi
 }

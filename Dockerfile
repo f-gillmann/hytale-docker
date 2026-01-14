@@ -1,4 +1,5 @@
-FROM eclipse-temurin:25-jre
+ARG BASE_IMAGE=eclipse-temurin:25-jre
+FROM ${BASE_IMAGE}
 
 ENV HYTALE_HOME="/opt/hytale"
 ENV DATA_DIR="/data"
@@ -6,14 +7,9 @@ ENV DATA_DIR="/data"
 ENV UID=1000
 ENV GID=1000
 
-# Setup user
-COPY build/setup_user.sh /tmp/
-RUN chmod +x /tmp/setup_user.sh && /tmp/setup_user.sh
-
-# Install dependencies
-RUN apt-get update && apt-get install -y \
-    curl unzip gosu tini  && \
-    rm -rf /var/lib/apt/lists/*
+# Setup users and dependencies
+RUN --mount=target=/build,source=build \
+    /build/setup.sh
 
 # Create directories
 RUN mkdir -p $HYTALE_HOME $DATA_DIR

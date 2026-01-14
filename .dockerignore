@@ -1,0 +1,23 @@
+# Secrets
+.env
+
+# Data dir
+data/
+
+# IDEs
+.idea/
+.vscode/
+
+# Vim swap files
+*.swp
+*~
+
+# Git
+.git
+.gitignore
+
+# Documentation and Configs
+docs/
+docker-compose.yml
+README.md
+LICENSE

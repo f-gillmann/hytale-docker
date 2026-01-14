@@ -1,2 +1,18 @@
-.idea/
+# Secrets
+.env
+
+# Data dir
 data/
+
+# IDEs
+.idea/
+.vscode/
+
+# Vim swap files
+*.swp
+*~
+
+# Apple bs (in case anyone opens this on a Mac)
+.DS_Store
+.AppleDouble
+.LSOverride
