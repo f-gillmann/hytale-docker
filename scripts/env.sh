@@ -4,16 +4,11 @@
 source /scripts/utils.sh
 
 # ===> Argument Helpers --------------------------------------------------------------------------------------------------------------
-JVM_ARGS=()
 SERVER_ARGS=()
 
-def_jvm_arg() {
+def_var() {
     local var="$1" default="$2"
     export "$var"="${!var:-$default}"
-
-    if [ -n "${!var}" ]; then
-        JVM_ARGS+=("${!var}")
-    fi
 }
 
 def_server_arg() {
@@ -42,8 +37,10 @@ export TZ="${TZ:-UTC}"                             # Timezone
 export SKIP_CHOWN_DATA="${SKIP_CHOWN_DATA:-false}" # Skip ownership change of data directory
 
 # ===> Paths -------------------------------------------------------------------------------------------------------------------------
-export HYTALE_HOME="/opt/hytale}"                                                            # Hytale installation directory
+export HYTALE_HOME="/opt/hytale"                                                            # Hytale installation directory
 export DATA_DIR="/data"                                                                      # Main data directory
+export JAR_PATH="${JAR_PATH:-$DATA_DIR/Server}"                                              # Server jar path
+export JAR_NAME="${JAR_NAME:-HytaleServer}"                                                  # Server jar name
 export SERVER_HOME="$DATA_DIR"                                                               # Server working directory
 export CREDENTIALS_FILE="${CREDENTIALS_FILE:-$DATA_DIR/.hytale-downloader-credentials.json}" # Downloader credentials
 
@@ -56,11 +53,12 @@ export DOWNLOADER_URL="https://downloader.hytale.com/hytale-downloader.zip"   # 
 
 # ===> JVM Configuration -------------------------------------------------------------------------------------------------------------
 # Memory settings
-def_jvm_arg MIN_MEMORY                  "${MIN_MEMORY:-}"                     # JVM initial heap size (-Xms)
-def_jvm_arg MAX_MEMORY                  "${MAX_MEMORY:-}"                     # JVM maximum heap size (-Xmx)
+def_var MEMORY                      "${MEMORY:-4G}"                  # JVM heap size
+def_var MIN_MEMORY                  "${MIN_MEMORY:-$MEMORY}"         # JVM initial heap size (-Xms), defaults to MEMORY
+def_var MAX_MEMORY                  "${MAX_MEMORY:-$MEMORY}"         # JVM maximum heap size (-Xmx), defaults to MEMORY
 
 # Extra JVM options
-export EXTRA_JVM_OPTS="${JVM_OPTS:-}"                                         # Extra JVM options
+def_var JVM_OPTS                     "${JVM_OPTS:-}"                  # Extra JVM options (array format)
 
 # ===> Logging -----------------------------------------------------------------------------------------------------------------------
 def_server_arg LOG_LEVEL                "info"                 --log          # Root logger level (trace, debug, info, warn, error)
@@ -143,8 +141,10 @@ build_java_opts() {
     [ -n "$MIN_MEMORY" ] && java_opts+=("-Xms$MIN_MEMORY")
     [ -n "$MAX_MEMORY" ] && java_opts+=("-Xmx$MAX_MEMORY")
 
-    # Add any additional args from JVM_ARGS array
-    java_opts+=("${JVM_ARGS[@]}")
+    # Additional JVM options
+    if [ -n "$JVM_OPTS" ]; then
+        eval "java_opts+=($JVM_OPTS)"
+    fi
 
     echo "${java_opts[@]}"
 }

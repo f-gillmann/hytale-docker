@@ -60,7 +60,7 @@ update_ownership() {
 }
 
 start_server() {
-    local jar_path="$DATA_DIR/Server/HytaleServer.jar"
+    local jar_path="$JAR_PATH/$JAR_NAME.jar"
 
     if [ ! -f "$jar_path" ]; then
         log_error "HytaleServer.jar not found at $jar_path"
@@ -80,7 +80,7 @@ start_server() {
 
     cd "$DATA_DIR/Server" || { log_error "Failed to change directory to $DATA_DIR/Server"; exit 1; }
 
-    eval "java $(build_java_opts) -jar HytaleServer.jar $(build_server_args)"
+    eval "java $(build_java_opts) -jar ${jar_path} $(build_server_args)"
 }
 
 if [ "$(id -u)" = 0 ]; then
