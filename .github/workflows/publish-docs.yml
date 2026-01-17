@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'docs/**'
+      - '.github/workflows/publish-docs.yml'
+      - 'scripts/env.sh'
   workflow_dispatch:
 
 concurrency:
