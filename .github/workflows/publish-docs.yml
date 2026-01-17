@@ -10,12 +10,16 @@ on:
       - 'scripts/env.sh'
   workflow_dispatch:
 
+permissions:
+  pages: write
+  id-token: write
+
 concurrency:
   group: publish-docs
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -51,7 +55,7 @@ jobs:
           path: ./docs/dist
 
   deploy:
-    needs: build-and-deploy
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
