@@ -3,7 +3,7 @@ name: Publish Docs to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'docs/**'
       - '.github/workflows/publish-docs.yml'
