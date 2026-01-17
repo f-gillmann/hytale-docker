@@ -77,7 +77,7 @@ check_game_version() {
     fi
 
     # Check if game files exist
-    if [ ! -f "$DATA_DIR/Server/HytaleServer.jar" ]; then
+    if [ ! -f "$JAR_PATH/$JAR_NAME.jar" ]; then
         log_info "Game files not found, download required"
         return 1
     fi
@@ -96,6 +96,9 @@ check_game_version() {
         log_warn "Failed to check latest game version"
         return 1
     fi
+
+    # export latest version so other functions can reuse it
+    LATEST_GAME_VERSION="$latest_version"
 
     # Get installed version if available
     local installed_version=""
@@ -133,8 +136,27 @@ download_game() {
 
     cd "$HYTALE_HOME" || { log_error "Failed to change directory to $HYTALE_HOME"; exit 1; }
 
-    local game_zip
-    game_zip=$(mktemp)
+    local latest_version safe_version game_zip
+
+    # Reuse LATEST_GAME_VERSION if already determined
+    if [ -n "$LATEST_GAME_VERSION" ]; then
+        latest_version="$LATEST_GAME_VERSION"
+    else
+        latest_version=$(./"$DOWNLOADER_BIN" -credentials-path "$CREDENTIALS_FILE" -print-version -patchline "$PATCHLINE" 2>/dev/null || true)
+    fi
+
+    # Sanitize version string for filename
+    safe_version=$(echo "$latest_version" | tr -cd '[:alnum:]._-')
+
+    if [ -n "$safe_version" ]; then
+        game_zip="/tmp/${safe_version}.zip"
+    else
+        # Fallback to random temp file if version is not available
+        game_zip=$(mktemp /tmp/hytale-game.zip)
+    fi
+
+    # Remove any existing file
+    rm -f "$game_zip" 2>/dev/null || true
 
     if ! ./"$DOWNLOADER_BIN" \
         -credentials-path "$CREDENTIALS_FILE" \
@@ -146,11 +168,14 @@ download_game() {
         exit 1
     fi
 
-    # Extract if zip exists
+    # Fallback to .zip extension if needed
+    if [ ! -f "$game_zip" ] && [ -f "${game_zip}.zip" ]; then
+        game_zip="${game_zip}.zip"
+    fi
+
     if [ -f "$game_zip" ]; then
         log_info "Extracting game files..."
 
-        # Verify zip file integrity before extraction
         if ! unzip -t "$game_zip" > /dev/null 2>&1; then
             log_error "Zip file is corrupted or invalid"
             rm -f "$game_zip"
@@ -166,14 +191,18 @@ download_game() {
         rm -f "$game_zip"
         log_info "Game files extracted"
 
-        # Save version after successful download
-        local latest_version
-        if latest_version=$(./"$DOWNLOADER_BIN" \
-            -credentials-path "$CREDENTIALS_FILE" \
-            -print-version \
-            -patchline "$PATCHLINE" 2>&1); then
-            echo "$latest_version" > "$DATA_DIR/.game-version"
-            log_info "Game version saved: $latest_version"
+        # Check and save the latest version if not already done
+        if [ -n "$LATEST_GAME_VERSION" ]; then
+            echo "$LATEST_GAME_VERSION" > "$DATA_DIR/.game-version"
+            log_info "Game version saved: $LATEST_GAME_VERSION"
+        else
+            if latest_version=$(./"$DOWNLOADER_BIN" \
+                -credentials-path "$CREDENTIALS_FILE" \
+                -print-version \
+                -patchline "$PATCHLINE" 2>&1); then
+                echo "$latest_version" > "$DATA_DIR/.game-version"
+                log_info "Game version saved: $latest_version"
+            fi
         fi
     fi
 }
