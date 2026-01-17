@@ -11,9 +11,9 @@ A simple Docker container to run a Hytale server with ease.
 
 ---
 
-**[<kbd> <br> Docs <br> </kbd>][Docs]**
-**[<kbd> <br> GitHub Registry <br> </kbd>][Registry]**
-**[<kbd> <br> Quickstart <br> </kbd>][Quickstart]**
+**[<kbd> <br> Docs <br> </kbd>][Docs]** 
+**[<kbd> <br> GitHub Registry <br> </kbd>][Registry]** 
+**[<kbd> <br> Quickstart <br> </kbd>][Quickstart]** 
 
 ---
 
@@ -43,3 +43,7 @@ You can find all available tags on the [GitHub Container Registry](https://githu
 [Docs]: https://f-gillmann.github.io/hytale-docker/
 [Registry]: https://github.com/f-gillmann/hytale-docker/pkgs/container/hytale-docker
 [Quickstart]: https://f-gillmann.github.io/hytale-docker/#quickstart
+[Workflow]: https://github.com/f-gillmann/hytale-docker/actions/workflows/publish.yml
+[License]: https://github.com/f-gillmann/hytale-docker/blob/master/LICENSE
+[Release]: https://github.com/f-gillmann/hytale-docker/releases/latest
+[Stars]: https://github.com/f-gillmann/hytale-docker/stargazers
