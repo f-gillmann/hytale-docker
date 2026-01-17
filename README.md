@@ -19,9 +19,6 @@ A simple Docker container to run a Hytale server with ease.
 
 </div>
 
-## Documentation
-For detailed documentation, please visit the [Docs](https://f-gillmann.github.io/hytale-docker/).
-
 ## Available Docker Tags
 
 | Tag                                                       | Base Image                    | Description                                                  |
