@@ -1,0 +1,180 @@
+---
+title: Server Authentication
+description: Learn how to authenticate your Hytale server
+---
+
+import {Aside, CardGrid, Code, LinkCard, Steps} from '@astrojs/starlight/components';
+import dockerComposeWithTokens from '../../../assets/examples/auth/docker-compose-with-tokens.example?raw';
+import dockerWithTokens from '../../../assets/examples/auth/docker-with-tokens.example?raw';
+import dockerComposeOffline from '../../../assets/examples/auth/docker-compose-offline.example?raw';
+
+To run your Hytale server in online mode and allow players to connect, you need to authenticate both the **Hytale Downloader** (for downloading server files) and the **Hytale Server** itself (for player authentication).
+
+<Aside type="note">
+    A Hytale account is required to download server files and run the server in online mode. [Create an
+    account](https://store.hytale.com/) if you don't have one. The container uses **`authenticated`** mode by default.
+</Aside>
+
+## Authentication Process
+
+### Phase 1: Downloader Authentication
+
+When you first start the container, the Hytale Downloader needs to authenticate to download the server files.
+
+<Steps>
+1. **Start your container**
+
+   The first time you run the container, you'll see output similar to:
+   ```
+   Please visit the following URL to authenticate:
+   https://account.hytale.com/oauth/device?code=XXXXXXXX
+   ```
+
+2. **Complete the authentication**
+
+   - Click the link or copy it to your browser
+   - Log in with your Hytale account credentials
+   - Authorize the application
+    <br/>
+
+3. **Wait for download**
+
+   After authentication, the downloader will automatically download the server files and start the server.
+</Steps>
+
+### Phase 2: Server Authentication
+
+Once the server starts for the first time, you need to authenticate it for online mode.
+
+<Steps>
+1. **Check server console**
+
+   After the server starts, you'll see a message:
+   ```
+   No server tokens configured. Use /auth login to authenticate.
+   ```
+
+2. **Attach to the server console**
+
+   Use Docker to attach to the running container:
+   ```bash
+   docker attach container_name
+   ```
+
+   Or with Docker Compose:
+   ```bash
+   docker compose attach service_name
+   ```
+
+3. **Initiate device authentication**
+
+   In the console, run:
+   ```
+   /auth login device
+   ```
+
+4. **Authorize the server**
+
+   - A link with a device code will appear in the console
+   - Click the link or copy it to your browser
+   - Log in with your Hytale account
+   - Authorize the server application
+    <br/>
+
+5. **Enable persistent authentication**
+
+   Once authorized, save your authentication for future restarts:
+   ```
+   /auth persistence Encrypted
+   ```
+
+   <Aside type="tip">
+   This stores your authentication credentials securely so you don't need to re-authenticate after container restarts.
+   </Aside>
+
+6. **Detach from console**
+
+   Press `Ctrl+P` followed by `Ctrl+Q` to detach from the console without stopping the container.
+
+7. **Restart the container**
+
+   ```bash
+   docker restart container_name
+   ```
+
+   Or with Docker Compose:
+   ```bash
+   docker compose restart
+   ```
+</Steps>
+
+## Using Environment Variables
+
+Alternatively, you can provide authentication tokens directly via environment variables to skip the interactive authentication process.
+
+### Setting Identity Token
+
+After completing the authentication steps above, you can extract the tokens and set them as environment variables for future deployments:
+
+<Code code={dockerComposeWithTokens} lang="yml" title="docker-compose.yml"/>
+
+Or with `docker run`:
+
+<Code code={dockerWithTokens} lang="bash"/>
+
+<Aside type="caution">
+    Keep your authentication tokens secure and never commit them to public repositories.
+</Aside>
+
+## Authentication Modes
+
+The server supports three authentication modes via the **`AUTH_MODE`** environment variable. **The default is `authenticated`.**
+
+| Mode            | Description                                       | Use Case                           |
+|-----------------|---------------------------------------------------|------------------------------------|
+| `authenticated` | Full online authentication required **(default)** | Production servers, public servers |
+| `offline`       | No authentication, allows any username            | Testing, LAN servers               |
+| `insecure`      | Minimal security checks                           | Development only                   |
+
+### Using Offline Mode
+
+For testing or LAN servers, you can use offline mode:
+
+<Code code={dockerComposeOffline} lang="yml" title="docker-compose.yml"/>
+
+<Aside type="danger">
+    Using `offline` or `insecure` modes allows anyone to join with any username and bypasses account verification. Only
+    use these modes for testing or private networks.
+</Aside>
+
+## Troubleshooting
+
+### Authentication Link Not Appearing
+
+If you don't see the authentication link:
+- Ensure the container has internet access
+- Check the container logs: **`docker logs container_name`**
+- Verify your Hytale account is active
+
+### "No server tokens configured" After Restart
+
+If you see this message after a restart:
+- Verify you ran **`/auth persistence Encrypted`** before restarting
+- Check that the **`/data`** volume is properly mounted and persistent
+- Ensure the container has write permissions to the data directory
+
+### Token Expired Errors
+
+If authentication tokens expire:
+1. Stop the container
+2. Remove the credentials file: `rm data/.hytale-downloader-credentials.json`
+3. Restart and re-authenticate following the steps above
+
+## Next Steps
+
+<CardGrid>
+    <LinkCard href="/reference/data-directory" title="Data Directory"
+              description="Learn about the server's data directory and its contents."/>
+    <LinkCard href="/reference/variables" title="Environment Variables"
+              description="Explore all available environment variables for configuration."/>
+</CardGrid>

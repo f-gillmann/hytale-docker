@@ -1,0 +1,62 @@
+---
+title: Getting Started
+---
+
+import {Aside, CardGrid, Code, LinkCard, Steps} from '@astrojs/starlight/components';
+import dockerCompose from '../../assets/examples/docker/docker-compose.example?raw';
+import docker from '../../assets/examples/docker/docker.example?raw';
+import dockerComposePersistent from '../../assets/examples/docker/persistent-docker-compose.example?raw';
+import dockerPersistent from '../../assets/examples/docker/persistent-docker.example?raw';
+
+## Introduction
+
+This docker image provides a Hytale that will automatically download the latest server files, keep them updated, and lets you configure it via environment variables.
+
+## Quickstart
+
+To use the lastest version run the following command:
+
+<Code code={docker} lang="bash"/>
+
+which will start the server on the default Hytale port **`5520`** using UDP.
+
+<Aside type="note" title="Persistent Data">
+    The container will store all data inside the **`/data`** directory.
+    You can [mount](https://docs.docker.com/engine/storage/volumes/) the directory from your host machine or a managed
+    volume.
+
+    When using **`docker run`** you can simple add the **`-v`** option alongside the path:
+    <Code code={dockerPersistent} lang="bash"/>
+
+    When using **`docker-compose`** you can add a **`volumes`** section to the service:
+    <Code code={dockerComposePersistent} lang="yml" title="docker-compose.yml"/>
+</Aside>
+
+### Docker Compose
+
+<Steps>
+1. Create a new file named **`docker-compose.yml`** in a directory of your choice.
+
+2. Add the contents below to the file
+    <Code code={dockerCompose} lang="yml" title="docker-compose.yml"/>
+
+3. Run **`docker-compose up -d`** in the same directory
+
+4. The server will start detached in the background
+</Steps>
+
+### Authentication
+You need to authorize the **`server`** and **`hytale-downloader`** to allow them to download updates and make players able to join your server when using online mode.
+
+For a detailed guide on how to set this up, check out the authentication guide:
+<LinkCard href="/guides/authentication" title="Authentication Guide"
+          description="Learn how to authenticate your Hytale server."/>
+
+### Next Steps
+
+<CardGrid>
+    <LinkCard href="/reference/variables" title="Environment Variables"
+              description="Learn about the available environment variables to configure your server."/>
+    <LinkCard href="/reference/data-directory" title="Data Directory"
+              description="Understand the structure of the data directory and how to manage your server data."/>
+</CardGrid>

@@ -1,0 +1,7 @@
+docker run -d \
+  --name hytale \
+  -p 5520:5520/udp \
+  -e IDENTITY_TOKEN="identity_token" \
+  -e SESSION_TOKEN="session_token" \
+  -v ./data:/data \
+  ghcr.io/f-gillmann/hytale-docker

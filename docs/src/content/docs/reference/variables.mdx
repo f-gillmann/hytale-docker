@@ -1,0 +1,169 @@
+---
+title: Environment Variables
+description: Complete reference for all user-configurable environment variables
+---
+
+import {Aside} from '@astrojs/starlight/components';
+
+<Aside type="note">
+This documentation is auto-generated from [`env.sh`](https://github.com/f-gillmann/hytale-docker/blob/master/scripts/env.sh).
+</Aside>
+
+This page provides a reference for all environment variables that can be used to configure your Hytale server container.
+
+<Aside type="tip">
+These variables can be set in your `docker-compose.yml` file under the `environment` section, or passed with `-e` flag when using `docker run`.
+</Aside>
+
+## Container Options
+
+Configure container runtime behavior and user permissions.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `UID` | `1000` | User id to run as |
+| `GID` | `1000` | Group id to run as |
+| `TZ` | `UTC` | Timezone |
+| `SKIP_CHOWN_DATA` | `false` | Skip ownership change of data directory |
+
+## Downloader Configuration
+
+Configure automatic server file downloads and updates.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `AUTO_DOWNLOAD` | `true` | Auto-download server files |
+| `PATCHLINE` | `release` | Download patchline (release/beta/alpha) |
+| `SKIP_DOWNLOADER_UPDATE` | `false` | Skip downloader updates |
+
+## JVM Configuration
+
+Control JVM memory settings and options.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `MEMORY` | `4G` | JVM heap size |
+| `MIN_MEMORY` | `4G` | JVM initial heap size (-Xms), defaults to MEMORY |
+| `MAX_MEMORY` | `4G` | JVM maximum heap size (-Xmx), defaults to MEMORY |
+| `JVM_OPTS` |  | Extra JVM options (array format) |
+
+## Logging
+
+Configure server logging behavior.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `LOG_LEVEL` | `info` | Root logger level (trace, debug, info, warn, error) |
+
+## Network Configuration
+
+Set server ports and network-related options.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `SERVER_BIND_IP` | `0.0.0.0` | Server bind IP |
+| `SERVER_PORT` | `5520` | Server port |
+| `TRANSPORT` | `QUIC` | Transport type (QUIC) |
+
+## Server Configuration
+
+Core Hytale server settings.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+
+### Assets & Resources
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ASSETS_PATH` | `/data/Assets.zip` | Asset directory |
+| `PREFAB_CACHE` |  | Prefab cache directory for immutable assets |
+| `WORLD_GEN` |  | World generation directory |
+| `MODS_PATH` |  | Additional mods directories |
+
+### Universe & World
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `UNIVERSE_PATH` | `/data/universe` | Universe data directory |
+
+### Authentication
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `AUTH_MODE` | `authenticated` | Authentication mode (authenticated/offline/insecure) |
+| `IDENTITY_TOKEN` |  | Identity token |
+| `SESSION_TOKEN` |  | Session token for Session Service API |
+
+### Server Mode
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `BARE_MODE` | `false` | Run server in bare mode |
+| `SINGLEPLAYER` | `false` | Enable singleplayer mode |
+
+### Permissions
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ALLOW_OP` | `false` | Allow operator permissions |
+
+### Plugins & Mods
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ACCEPT_EARLY_PLUGINS` | `false` | Loading early plugins is unsupported and may cause stability issues |
+| `EARLY_PLUGINS` |  | Early plugin directories |
+
+### Backups
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `BACKUP_ENABLED` | `false` | Enable automatic backups |
+| `BACKUP_DIR` |  | Backup storage directory |
+| `BACKUP_FREQUENCY` |  | Backup frequency in minutes |
+| `BACKUP_MAX_COUNT` |  | Maximum number of backups to keep |
+
+### Network Options
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `FORCE_NETWORK_FLUSH` | `true` | Force network flush (true/false) |
+
+### Validation & Migration
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `VALIDATE_ASSETS` | `false` | Validate assets on startup |
+| `VALIDATE_PREFABS` |  | Validate prefabs (ValidationOption) |
+| `VALIDATE_WORLD_GEN` | `false` | Validate world generation |
+| `SHUTDOWN_AFTER_VALIDATE` | `false` | Auto-shutdown after validation |
+| `MIGRATE_WORLDS` |  | Worlds to migrate |
+
+### Boot Configuration
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `BOOT_COMMAND` |  | Command to run on boot |
+| `GENERATE_SCHEMA` | `false` | Generate schema and exit |
+
+### Debugging & Development
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DISABLE_SENTRY` | `false` | Disable Sentry error reporting |
+| `DISABLE_ASSET_COMPARE` | `false` | Disable asset comparison |
+| `DISABLE_CPB_BUILD` | `false` | Disable compact prefab buffer building |
+| `DISABLE_FILE_WATCHER` | `false` | Disable file watcher |
+| `EVENT_DEBUG` | `false` | Enable event debugging |
+| `OWNER_NAME` |  | Server owner name |
+| `OWNER_UUID` |  | Server owner UUID |
+| `CLIENT_PID` |  | Client process ID |
+
+## Extra Arguments
+
+Pass additional custom arguments to the server.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `EXTRA_ARGS` |  | Extra arguments to pass to the server |

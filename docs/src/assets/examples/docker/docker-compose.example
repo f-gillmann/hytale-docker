@@ -1,0 +1,7 @@
+services:
+  hytale:
+    image: ghcr.io/f-gillmann/hytale-docker
+    container_name: hytale
+    restart: unless-stopped
+    ports:
+      - "5520:5520/udp"

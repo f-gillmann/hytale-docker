@@ -1,0 +1,6 @@
+services:
+  hytale:
+    # other configuration ...
+    volumes:
+      # relative './data' directory mapped to '/data' in the container
+      - ./data:/data

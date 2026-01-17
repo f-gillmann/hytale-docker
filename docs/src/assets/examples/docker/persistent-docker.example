@@ -1,0 +1,1 @@
+docker run ... -v /path/to/dir:/data ghcr.io/f-gillmann/hytale-docker

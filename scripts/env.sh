@@ -29,15 +29,15 @@ def_server_bool() {
     fi
 }
 
-# ===> General Options ---------------------------------------------------------------------------------------------------------------
-export UID="${UID:-1000}"                          # Linux user id to run as
-export GID="${GID:-1000}"                          # Linux group id to run as
+# ===> Container Options --------------------------------------------------------------------------------------------------------------
+export UID="${UID:-1000}"                          # User id to run as
+export GID="${GID:-1000}"                          # Group id to run as
 export UMASK="${UMASK:-0002}"                      # File creation umask
 export TZ="${TZ:-UTC}"                             # Timezone
 export SKIP_CHOWN_DATA="${SKIP_CHOWN_DATA:-false}" # Skip ownership change of data directory
 
 # ===> Paths -------------------------------------------------------------------------------------------------------------------------
-export HYTALE_HOME="/opt/hytale"                                                            # Hytale installation directory
+export HYTALE_HOME="/opt/hytale"                                                             # Hytale installation directory
 export DATA_DIR="/data"                                                                      # Main data directory
 export JAR_PATH="${JAR_PATH:-$DATA_DIR/Server}"                                              # Server jar path
 export JAR_NAME="${JAR_NAME:-HytaleServer}"                                                  # Server jar name
@@ -62,12 +62,11 @@ def_var JVM_OPTS                     "${JVM_OPTS:-}"                  # Extra JV
 
 # ===> Logging -----------------------------------------------------------------------------------------------------------------------
 def_server_arg LOG_LEVEL                "info"                 --log          # Root logger level (trace, debug, info, warn, error)
-export LOG_TIMESTAMP="${LOG_TIMESTAMP:-false}"                                # Include timestamp in logs
 
 # ===> Server Network ----------------------------------------------------------------------------------------------------------------
-def_server_arg SERVER_BIND_IP           "0.0.0.0"              ""             # Server bind IP (handled specially in build_server_args)
-def_server_arg SERVER_PORT              "5520"                 ""             # Server port (handled specially in build_server_args)
-def_server_arg TRANSPORT                "QUIC"                 --transport    # Transport type (QUIC/TCP)
+def_server_arg SERVER_BIND_IP           "0.0.0.0"              ""             # Server bind IP
+def_server_arg SERVER_PORT              "5520"                 ""             # Server port
+def_server_arg TRANSPORT                "QUIC"                 --transport    # Transport type (QUIC)
 
 # ===> Hytale Configuration ----------------------------------------------------------------------------------------------------------
 # Assets & Resources
@@ -92,7 +91,7 @@ def_server_bool SINGLEPLAYER            "false"     --singleplayer            # 
 def_server_bool ALLOW_OP                "false"     --allow-op                # Allow operator permissions
 
 # Plugins & Mods
-def_server_bool ACCEPT_EARLY_PLUGINS    "false"     --accept-early-plugins    # You acknowledge that loading early plugins is unsupported and may cause stability issues.
+def_server_bool ACCEPT_EARLY_PLUGINS    "false"     --accept-early-plugins    # Loading early plugins is unsupported and may cause stability issues
 def_server_arg  EARLY_PLUGINS           ""          --early-plugins           # Early plugin directories
 
 # Backups
@@ -125,7 +124,7 @@ def_server_bool DISABLE_CPB_BUILD       "false"     --disable-cpb-build       # 
 def_server_bool DISABLE_FILE_WATCHER    "false"     --disable-file-watcher    # Disable file watcher
 def_server_bool EVENT_DEBUG             "false"     --event-debug             # Enable event debugging
 
-# Server ownership
+# Server Ownership
 def_server_arg  OWNER_NAME              ""          --owner-name              # Server owner name
 def_server_arg  OWNER_UUID              ""          --owner-uuid              # Server owner UUID
 def_server_arg  CLIENT_PID              ""          --client-pid              # Client process ID
