@@ -4,6 +4,8 @@ import starlight from '@astrojs/starlight';
 
 // https://astro.build/config
 export default defineConfig({
+    site: 'https://f-gillmann.github.io',
+    base: '/hytale-docker',
     integrations: [
         starlight({
             title: 'Hytale Docker',
